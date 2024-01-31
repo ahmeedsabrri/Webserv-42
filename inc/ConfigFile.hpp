@@ -6,7 +6,7 @@
 /*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 03:46:59 by asabri            #+#    #+#             */
-/*   Updated: 2024/01/31 04:33:23 by asabri           ###   ########.fr       */
+/*   Updated: 2024/01/31 05:00:17 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@
 #include <utility>
 
 #include "Server.hpp"
-
-extern array<string, 9> ServerDirectives = {
+extern vector<string> ServerDirective = {
     "body_size",
     "root",
     "autoindex",
@@ -27,7 +26,7 @@ extern array<string, 9> ServerDirectives = {
     "index",
     "error_page",
 };
-extern array<string,3> Server = {
+extern vector<string> ServerContext = {
     "server_name",
     "port",
     "location"
@@ -40,6 +39,8 @@ class ConfigFile
         ifstream   file;
         vector<Server> servers;
     public :
+        ConfigFile(string path);
         void parse();
-        void setfile(string file);
+        void getServers();
+        void setServers(vector<Server> servers);
 };
