@@ -6,7 +6,7 @@
 /*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 03:46:59 by asabri            #+#    #+#             */
-/*   Updated: 2024/01/31 05:00:17 by asabri           ###   ########.fr       */
+/*   Updated: 2024/02/01 05:07:28 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,31 +16,23 @@
 #include <vector>
 #include <array>
 #include <utility>
+#include <sstream>
+
 
 #include "Server.hpp"
-extern vector<string> ServerDirective = {
-    "body_size",
-    "root",
-    "autoindex",
-    "allow_methods",
-    "index",
-    "error_page",
-};
-extern vector<string> ServerContext = {
-    "server_name",
-    "port",
-    "location"
-};
-
 using namespace std;
 class ConfigFile 
 {
     private :
         ifstream   file;
         vector<Server> servers;
+        vector<string> configServers;
+        size_t      nbServer;
     public :
         ConfigFile(string path);
         void parse();
+        void parseServer(string& line,Server& server);
         void getServers();
         void setServers(vector<Server> servers);
+        void ServerContextToSplite(string& line);
 };
