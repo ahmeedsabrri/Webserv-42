@@ -6,7 +6,7 @@
 /*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 07:39:34 by asabri            #+#    #+#             */
-/*   Updated: 2024/02/01 05:10:26 by asabri           ###   ########.fr       */
+/*   Updated: 2024/02/02 19:53:16 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ ConfigFile::ConfigFile(string path)
     this->file.open(path);
     if (!this->file.is_open())
         throw runtime_error("Error opening file");
-    else
-        cout << "File opened successfully" << endl;
 }
 void skipwhitespaces(string& line)
 {
@@ -110,18 +108,113 @@ void ConfigFile::ServerContextToSplite(string& line)
 }
 void ConfigFile::parseServer(string& line,Server& server)
 {
-    (void)server    ;
+    (void)server;
+
     stringstream ss(line);
-    string config;
-    while (ss >> config)
-        cout << config << endl;
+    string token;
+    bool serverName = false;
+    ss >> token;
+    if (token != "{")
+        throw runtime_error("Error : server directive not found");
+    while (ss >> token)
+    {
+        if (token == "listen")
+        {
+            ss >> token;
+            if (server.getPort().size() != 0)
+                throw runtime_error("Error : multiple listen directive");
+            server.setPort(token);
+        }
+        else if (token == "server_name")
+        {
+            if (server.getServerName() != "")
+                throw runtime_error("Error : multiple server_name directive");
+            ss >> token;
+            server.setServerName(token);
+            serverName = true;
+        }
+        else if (token == "client_max_body_size")
+        {
+            if (server.getBodySize() != 0)
+                throw runtime_error("Error : multiple client_max_body_size directive");
+            ss >> token;
+            server.setBodySize(token);
+
+        }
+        else if (token == "autoindex")
+        {
+            ss >> token;
+            server.setAutoIndex(token);
+        }
+        else if (token == "location")
+        {
+            ss >> token;
+            if (token == "{")
+                throw runtime_error("Error : location directive not found");
+            string locationPath;
+            locationPath = token;
+            vector<string> locationDirectives;
+            ss >> token;
+            while (token != "}")
+            {
+                locationDirectives.push_back(token);
+                ss >> token;
+            }
+            server.setLocationContexts(locationPath, locationDirectives);
+            if (token != "}")
+                throw runtime_error("Error : missing bracket");
+        }
+        else if (token == "root")
+        {
+            ss >> token;
+            server.setRoot(token);
+        }
+        else if (token == "index")
+        {
+            ss >> token;
+            while (ss >> token)
+            {
+                if (token.back() == ';')
+                {
+                    token.pop_back();
+                    server.setIndex(token);
+                    break ;
+                }
+                server.setIndex(token);
+            }
+            server.setIndex(token);
+        }
+        else if (token == "allow")
+        {
+            stringstream allow; 
+            while (ss >> token)
+            {
+                if (token.back() == ';')
+                {
+                    token.pop_back();
+                    allow << token;
+                    server.setAllowMethodes(allow);
+                    break ;
+                }
+                allow << token << " ";
+            }
+        }
+        else if (token == "error_page")
+        {
+            server.setErrorPage(ss);
+        }
+        else if (token == "{" || token == "server")
+            throw runtime_error("Error : unknown directive");
+    }
+    if (!serverName)
+        throw runtime_error("Error : at least one server_name directive is required");
 }
 void ConfigFile::parse()
 {
     string line;
     string config;
     getline(this->file, line, '\0');
-    if (line.empty())
+    if (line.size() == 0)
         throw runtime_error("Error : empty file");
     skipComments(line);
     skipwhitespaces(line);
@@ -133,10 +226,7 @@ void ConfigFile::parse()
     {
         Server srv;
         parseServer(this->configServers[i], srv);
-        // this->servers.push_back(srv);
+        this->servers.push_back(srv);
         i++;
     }
-    // if (nbServer > 1)
-    //     checkServers();
-    cout << "nbServer : " << this->nbServer << endl;
 }

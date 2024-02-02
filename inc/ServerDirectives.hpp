@@ -6,7 +6,7 @@
 /*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 03:49:09 by asabri            #+#    #+#             */
-/*   Updated: 2024/01/31 04:11:03 by asabri           ###   ########.fr       */
+/*   Updated: 2024/02/02 14:04:16 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,10 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <map>
+#include <sstream>
 using namespace std;
 
-struct AllowMethodes{
-    bool Get;
-    bool Post;
-    bool Delete;    
-};
 
 class ServerDirectives 
 {
@@ -28,24 +25,21 @@ class ServerDirectives
         size_t  bodySize;
         string  root;
         bool  autoIndex;
-        vector<AllowMethodes> allowMethodes;
+        vector<string> allowMethodes;
         vector<string>  index;
-        pair<int,string> errorPage;
+        map<short,string> errorPage;
     public :
-        void getBodySize();
-        void getRoot();
-        void getAutoIndex();
-        void getAllowMethodes();
-        void getIndex();
-        void getErrorPage();
-        void setBodySize(size_t bodySize);
+        ServerDirectives();
+        size_t getBodySize();
+        string getRoot();
+        bool getAutoIndex();
+        vector<string> getAllowMethodes();
+        vector<string> getIndex();
+        map<int,string> getErrorPage();
+        void setBodySize(string bodySize);
         void setRoot(string root);
-        void setAutoIndex(bool autoIndex);
-        void setAllowMethodes(vector<AllowMethodes> allowMethodes);
-        void setIndex(vector<string> index);
-        void setErrorPage(pair<int,string> errorPage);
-        
-        
-        
-    
+        void setAutoIndex(string autoIndex);
+        void setAllowMethodes(stringstream& allowMethodes);
+        void setIndex(string index);
+        void setErrorPage(stringstream& errorPage);
 };
