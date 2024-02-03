@@ -6,7 +6,7 @@
 /*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 03:46:59 by asabri            #+#    #+#             */
-/*   Updated: 2024/02/02 00:56:33 by asabri           ###   ########.fr       */
+/*   Updated: 2024/02/03 15:35:15 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ class ConfigFile
         vector<Server> servers;
         vector<string> configServers;
         size_t      nbServer;
-        
     public :
         ConfigFile(string path);
         void parse();
@@ -36,4 +35,5 @@ class ConfigFile
         void getServers();
         void setServers(vector<Server> servers);
         void ServerContextToSplite(string& line);
+        void printServers();
 };

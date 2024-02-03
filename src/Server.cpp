@@ -6,12 +6,12 @@
 /*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 22:20:50 by asabri            #+#    #+#             */
-/*   Updated: 2024/02/02 19:48:00 by asabri           ###   ########.fr       */
+/*   Updated: 2024/02/03 15:20:39 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/Server.hpp"
-#include <netinet/in.h>
+#include "../inc/LocationContext.hpp"
 Server::Server()
 {
     this->serverName = "";
@@ -20,7 +20,10 @@ string Server::getServerName()
 {
     return (this->serverName);
 }
-
+vector<LocationContext> Server::getLocationContexts()
+{
+    return (this->locationContexts);
+}
 map<string,int> Server::getPort()
 {
     return (this->port);
@@ -62,13 +65,9 @@ void Server::setPort(string port)
     }
     if (port_ < 0 || port_ > 65535)
         throw runtime_error("Error: wrong port1");
-    cout << "ip: " << ip_ << " port: " << port_ << endl;
     this->port.insert(pair<string,int>(ip_,port_));
 }
-// void LocationContext::checkLocationPath(string locationPath)
-// {
-    
-// }
+
 void Server::setLocationContexts(string path,std::vector<std::string> param)
 {
     LocationContext locationContext;
@@ -78,8 +77,10 @@ void Server::setLocationContexts(string path,std::vector<std::string> param)
     bool autoindex = false;
     for (size_t i = 0; i < param.size(); i++)
     {
-        if (param[i] == "root")
+        if (param[i] == "root"){
             locationContext.setRoot(param[i + 1]);
+            i++;
+        }
         else if (param[i] == "allow_methodes" && !methodes)
         {
             stringstream allow;
@@ -114,10 +115,12 @@ void Server::setLocationContexts(string path,std::vector<std::string> param)
         {
             locationContext.setAutoIndex(param[i + 1]);
             autoindex = true;
+            i++;
         }
         else if (param[i] == "client_max_body_size")
         {
             locationContext.setBodySize(param[i + 1]);
+            i++;
         }
         else if (param[i] == "error_page")
         {
@@ -163,15 +166,17 @@ void Server::setLocationContexts(string path,std::vector<std::string> param)
             }
            
         }
+        else if (validDirective(param[i]) == 0 && param[i] != "{" )
+            throw runtime_error("Error: wrong directive");
     }
-    if (locationContext.getPath() == "" && this->getRoot() != "")
-        locationContext.setRoot(this->getRoot());
-    
+    // if (locationContext.getPath() == "" && this->getRoot() != "")
+    //     locationContext.setRoot(this->getRoot());
+
     this->locationContexts.push_back(locationContext);
-    while (this->locationContexts.size() > 1)
-    {
-        if (this->locationContexts[this->locationContexts.size() - 1].getPath() == this->locationContexts[this->locationContexts.size() - 2].getPath())
-            throw runtime_error("Error: duplicate location path");
-        this->locationContexts.pop_back();
-    }
+    // while (this->locationContexts.size() > 1)
+    // {
+    //     if (this->locationContexts[this->locationContexts.size() - 1].getPath() == this->locationContexts[this->locationContexts.size() - 2].getPath())
+    //         throw runtime_error("Error: duplicate location path");
+    //     this->locationContexts.pop_back();
+    // }
 }

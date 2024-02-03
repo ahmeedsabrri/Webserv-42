@@ -6,7 +6,7 @@
 /*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 23:35:38 by asabri            #+#    #+#             */
-/*   Updated: 2024/02/02 17:29:06 by asabri           ###   ########.fr       */
+/*   Updated: 2024/02/03 14:27:50 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,29 @@ ServerDirectives::ServerDirectives()
     this->bodySize = 0;
     this->root = "";
     this->autoIndex = false;
+    this->__directives[0] = "listen";this->__directives[1] = "server_name";
+    this->__directives[2] = "client_max_body_size";this->__directives[3] = "autoindex";
+    this->__directives[4] = "location";this->__directives[5] = "root";
+    this->__directives[6] = "index";this->__directives[7] = "allow";
+    this->__directives[8] = "error_page";this->__directives[9] = "return";
+    this->__directives[10] = "cgi";
 }
 size_t ServerDirectives::getBodySize(){return (this->bodySize);}
 bool ServerDirectives::getAutoIndex(){return (this->autoIndex);}
 string ServerDirectives::getRoot(){return (this->root);}
 vector<string> ServerDirectives::getIndex(){return (this->index);}
+vector<string> ServerDirectives::getAllowMethodes(){return (this->allowMethodes);}
+map<short,string> ServerDirectives::getErrorPage(){return (this->errorPage);}
 
-
+int ServerDirectives::validDirective(string token)
+{
+    for (size_t i = 0; i < __directives.size(); i++)
+    {
+        if (token == __directives[i])
+            return (1);
+    }
+    return (0);
+}
 void ServerDirectives::setErrorPage(stringstream& errorPage)
 {
     short error_code;
