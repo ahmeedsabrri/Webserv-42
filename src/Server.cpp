@@ -6,7 +6,7 @@
 /*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/01 22:20:50 by asabri            #+#    #+#             */
-/*   Updated: 2024/02/03 15:20:39 by asabri           ###   ########.fr       */
+/*   Updated: 2024/02/03 18:18:18 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ string Server::getServerName()
 {
     return (this->serverName);
 }
-vector<LocationContext> Server::getLocationContexts()
+map<string,LocationContext> Server::getLocationContexts()
 {
     return (this->locationContexts);
 }
@@ -169,14 +169,9 @@ void Server::setLocationContexts(string path,std::vector<std::string> param)
         else if (validDirective(param[i]) == 0 && param[i] != "{" )
             throw runtime_error("Error: wrong directive");
     }
-    // if (locationContext.getPath() == "" && this->getRoot() != "")
-    //     locationContext.setRoot(this->getRoot());
-
-    this->locationContexts.push_back(locationContext);
-    // while (this->locationContexts.size() > 1)
-    // {
-    //     if (this->locationContexts[this->locationContexts.size() - 1].getPath() == this->locationContexts[this->locationContexts.size() - 2].getPath())
-    //         throw runtime_error("Error: duplicate location path");
-    //     this->locationContexts.pop_back();
-    // }
+    if (locationContext.getRoot().empty() && this->getRoot().size() > 0)
+        locationContext.setRoot(this->getRoot());
+    if (this->locationContexts.find(path) != this->locationContexts.end())
+        throw runtime_error("Error: duplicate location path");
+    this->locationContexts.insert(pair<string,LocationContext>(path,locationContext));
 }

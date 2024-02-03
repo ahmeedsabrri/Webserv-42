@@ -6,7 +6,7 @@
 /*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 04:11:28 by asabri            #+#    #+#             */
-/*   Updated: 2024/02/03 14:13:27 by asabri           ###   ########.fr       */
+/*   Updated: 2024/02/03 18:06:10 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@ class Server : public ServerDirectives
     private :
         string  serverName;
         map<string,int>     port;
-        vector<LocationContext> locationContexts;
+        map<string,LocationContext> locationContexts;
     public :
         Server();
         string getServerName();
         map<string,int>  getPort();
-        vector<LocationContext> getLocationContexts();
+        map<string,LocationContext> getLocationContexts();
         void setServerName(string serverName);
         void setPort(string port);
         void setLocationContexts(string path,std::vector<std::string> param);

@@ -6,7 +6,7 @@
 /*   By: asabri <asabri@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 07:39:34 by asabri            #+#    #+#             */
-/*   Updated: 2024/02/03 16:12:36 by asabri           ###   ########.fr       */
+/*   Updated: 2024/02/03 18:11:54 by asabri           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,38 +46,38 @@ void ConfigFile::printServers()
                 cout << it->first << " " << it->second << endl;
         }
 
-        vector<LocationContext> locationContexts =  this->servers[i].getLocationContexts();
+        map<string,LocationContext> locationContexts =  this->servers[i].getLocationContexts();
         if (locationContexts.size() != 0)
         {
             cout << "Location Contexts : " << endl;
-            for (vector<LocationContext>::iterator it = locationContexts.begin(); it != locationContexts.end(); it++)
+            for (map<string,LocationContext>::iterator it = locationContexts.begin(); it != locationContexts.end(); it++)
             {
                 cout << "------------begin location--------------" << endl;
-                cout << "Path : " << it->getPath() << endl;
-                if (it->getRoot() != "")
-                    cout << "Root : " << it->getRoot() << endl;
-                if (it->getAllowMethodes().size() != 0)
+                cout << "Path : " << it->second.getPath() << endl;
+                if (it->second.getPath() != "")
+                    cout << "Root : " << it->second.getRoot() << endl;
+                if (it->second.getAllowMethodes().size() != 0)
                 {
                     cout << "Allow : ";
-                    for (size_t j = 0; j < it->getAllowMethodes().size(); j++)
-                        cout << it->getAllowMethodes()[j] << " ";
+                    for (size_t j = 0; j < it->second.getAllowMethodes().size(); j++)
+                        cout << it->second.getAllowMethodes()[j] << " ";
                     cout << endl;
                 }
-                if (it->getAutoIndex() != 0)
-                    cout << "Autoindex : " << it->getAutoIndex() << endl;
-                if (it->getBodySize() != 0)
-                    cout << "BodySize : " << it->getBodySize() << endl;
-                if (it->getIndex().size() != 0)
+                if (it->second.getAutoIndex() != 0)
+                    cout << "Autoindex : " << it->second.getAutoIndex() << endl;
+                if (it->second.getBodySize() != 0)
+                    cout << "BodySize : " << it->second.getBodySize() << endl;
+                if (it->second.getIndex().size() != 0)
                 {
                     cout << "Index : ";
-                    for (size_t j = 0; j < it->getIndex().size(); j++)
-                        cout << it->getIndex()[j] << " ";
+                    for (size_t j = 0; j < it->second.getIndex().size(); j++)
+                        cout << it->second.getIndex()[j] << " ";
                     cout << endl;
                 }
-                if (it->getCgi().size() != 0 )
+                if (it->second.getCgi().size() != 0 )
                 {
                     
-                    map<string,string> temp = it->getCgi();
+                    map<string,string> temp = it->second.getCgi();
                     map<string,string>::iterator it_ = temp.begin();
                     while (it_ != temp.end())
                     {
@@ -85,9 +85,9 @@ void ConfigFile::printServers()
                         it_++;
                     }
                 }
-                if (it->getRedir().size() != 0)
+                if (it->second.getRedir().size() != 0)
                 {
-                    map<short,string> temp = it->getRedir();
+                    map<short,string> temp = it->second.getRedir();
                     map<short,string>::iterator it_ = temp.begin();
                     while (it_ != temp.end())
                     {
